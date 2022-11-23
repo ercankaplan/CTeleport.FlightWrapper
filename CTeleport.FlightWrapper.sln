@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{85F12E6D-05F0-4FF2-B41A-1C9D470D617C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{A5377D57-F0F5-4182-8A31-298D7C2873CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{B5924D3B-0314-4614-ADC6-749A04F6EB72}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5E19D3FD-F5B2-49FC-B598-1A5C3D71C674}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeleport.FlightWrapper.Service", "CTeleport.FlightWrapper.Service\CTeleport.FlightWrapper.Service.csproj", "{B193B29D-3925-451D-B268-010E929E3271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeleport.FlightWrapper.Data", "CTeleport.FlightWrapper.Data\CTeleport.FlightWrapper.Data.csproj", "{3F5C159C-CED9-47B1-9F3F-6BDB59B81A45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeleport.FlightWrapper.Core", "CTeleport.FlightWrapper.Core\CTeleport.FlightWrapper.Core.csproj", "{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeleport.FlightWrapper.Api", "CTeleport.FlightWrapper.Api\CTeleport.FlightWrapper.Api.csproj", "{0CE34B83-A455-4D03-B257-43510E9E3FAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B193B29D-3925-451D-B268-010E929E3271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B193B29D-3925-451D-B268-010E929E3271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B193B29D-3925-451D-B268-010E929E3271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B193B29D-3925-451D-B268-010E929E3271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F5C159C-CED9-47B1-9F3F-6BDB59B81A45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F5C159C-CED9-47B1-9F3F-6BDB59B81A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F5C159C-CED9-47B1-9F3F-6BDB59B81A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F5C159C-CED9-47B1-9F3F-6BDB59B81A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CE34B83-A455-4D03-B257-43510E9E3FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CE34B83-A455-4D03-B257-43510E9E3FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CE34B83-A455-4D03-B257-43510E9E3FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CE34B83-A455-4D03-B257-43510E9E3FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A5377D57-F0F5-4182-8A31-298D7C2873CB} = {85F12E6D-05F0-4FF2-B41A-1C9D470D617C}
+		{B5924D3B-0314-4614-ADC6-749A04F6EB72} = {85F12E6D-05F0-4FF2-B41A-1C9D470D617C}
+		{B193B29D-3925-451D-B268-010E929E3271} = {A5377D57-F0F5-4182-8A31-298D7C2873CB}
+		{3F5C159C-CED9-47B1-9F3F-6BDB59B81A45} = {A5377D57-F0F5-4182-8A31-298D7C2873CB}
+		{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376} = {A5377D57-F0F5-4182-8A31-298D7C2873CB}
+		{0CE34B83-A455-4D03-B257-43510E9E3FAD} = {B5924D3B-0314-4614-ADC6-749A04F6EB72}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCCF796B-B92F-478B-8EEE-8F7F8C409D92}
+	EndGlobalSection
+EndGlobal
