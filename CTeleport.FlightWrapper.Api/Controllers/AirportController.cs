@@ -19,7 +19,7 @@ namespace CTeleport.FlightWrapper.Api.Controllers
             _airportService = airportService;
         }
 
-        [HttpGet(Name = "GetDistance")]
+        [HttpGet("GetDistance")]
         public async Task<IActionResult> GetDistance([FromQuery] DistanceQueryModel model)
         {
            var distance = await _airportService.GetDistance(model.OrginAirportCode, model.DestinationAirportCode);

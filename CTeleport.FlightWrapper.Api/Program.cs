@@ -1,9 +1,15 @@
 using CTeleport.FlightWrapper.Api.Extentions;
 using CTeleport.FlightWrapper.Core.Configuration;
 using FluentValidation.AspNetCore;
+using Serilog;
 using System.Reflection;
 
+//create the logger and setup your sinks, filters and properties
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 var configuration = new ConfigurationBuilder()
                 .SetBasePath(builder.Environment.ContentRootPath)
@@ -26,6 +32,16 @@ builder.Services.AddControllers()
                     // Automatic registration of validators in assembly
                     options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                 });
+
+var logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.FromLogContext()
+        .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

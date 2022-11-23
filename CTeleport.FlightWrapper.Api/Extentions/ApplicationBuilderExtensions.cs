@@ -1,4 +1,5 @@
-﻿using CTeleport.FlightWrapper.Api.Models.Base;
+﻿using CTeleport.FlightWrapper.Api.Infrastructure.ExceptionHandler;
+using CTeleport.FlightWrapper.Api.Models.Base;
 using CTeleport.FlightWrapper.Core.Configuration;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -27,6 +28,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseExceptionHandlingMiddleware();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -37,20 +40,6 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             {
                 endpoints.MapControllers();
             });
-
-            //app.UseErrorHandlingMiddleware();
-
-            app.UseStatusCodePagesWithReExecute("/errors", "?code={0}");
-
-            app.UseCustomExceptionHandler();
-
-            // Configure files
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ServeUnknownFileTypes = false,
-                DefaultContentType = "text/plain"
-            });
-
 
             // Configure Swagger
 
@@ -68,19 +57,10 @@ namespace CTeleport.FlightWrapper.Api.Extentions
         /// Add exception handling
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseCustomExceptionHandler(this IApplicationBuilder application)
+        public static void UseExceptionHandlingMiddleware(this IApplicationBuilder application)
         {
-            application.UseExceptionHandler(a => a.Run(async context =>
-            {
-                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-                var exception = exceptionHandlerPathFeature.Error;
+            application.UseMiddleware<ExceptionHandlingMiddleware>();
 
-#if DEBUG
-                await context.Response.WriteAsJsonAsync(new ResponseErrorViewModel(new List<ErrorViewModel> { new ErrorViewModel("500", exception.Message) }));
-#else
-                await context.Response.WriteAsJsonAsync(new ResponseErrorViewModel(new List<ErrorViewModel> { new ErrorViewModel("500", "A generic error has occurred on the server.") }));
-#endif
-            }));
         }
 
 
