@@ -1,4 +1,5 @@
-﻿using CTeleport.FlightWrapper.Core.Configuration;
+﻿using CTeleport.FlightWrapper.Api.Infrastructure.Filters;
+using CTeleport.FlightWrapper.Core.Configuration;
 using CTeleport.FlightWrapper.Core.HttpClient;
 using CTeleport.FlightWrapper.Core.Infrastructure;
 using CTeleport.FlightWrapper.Core.Interfaces;
@@ -40,7 +41,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             AppSettings = appSettings;
             Configuration = configuration;
 
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(typeof(ModelStateFilter)));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
 
@@ -130,7 +132,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>();
         }
 
-
+      
 
     }
 }
