@@ -2,6 +2,7 @@
 using CTeleport.FlightWrapper.Core.Configuration;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Configuration;
 
 namespace CTeleport.FlightWrapper.Api.Extentions
 {
@@ -15,13 +16,36 @@ namespace CTeleport.FlightWrapper.Api.Extentions
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         /// <param name="appSettings">Settings of the application</param>
-        public static void ConfigureRequestPipeline(this IApplicationBuilder application, AppSettings appSettings)
+        public static void ConfigureRequestPipeline(this IApplicationBuilder app , IWebHostEnvironment env, AppSettings appSettings)
         {
-            application.UseStatusCodePagesWithReExecute("/errors", "?code={0}");
-            application.UseSeturExceptionHandler();
+
+
+            // Configure the HTTP request pipeline.
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            //app.UseErrorHandlingMiddleware();
+
+            app.UseStatusCodePagesWithReExecute("/errors", "?code={0}");
+
+            app.UseCustomExceptionHandler();
 
             // Configure files
-            application.UseStaticFiles(new StaticFileOptions
+            app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = false,
                 DefaultContentType = "text/plain"
@@ -30,45 +54,21 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
             // Configure Swagger
 
-            //if (app.Environment.IsDevelopment())
+            if (env.IsDevelopment())
             {
-                application.UseSwagger();
-                application.UseSwaggerUI();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
+  
            
-
-            // For IP Address
-            application.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-
-            // Configure routing
-            application.UseRouting();
-
-            // Configure authentication
-            application.UseAuthentication();
-            application.UseAuthorization();
-
-
-            application.UseHttpsRedirection();
-
-            //application.MapControllers();
-
-
-            // Configure Mvc
-            //application.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-            //});
         }
 
         /// <summary>
         /// Add exception handling
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseSeturExceptionHandler(this IApplicationBuilder application)
+        public static void UseCustomExceptionHandler(this IApplicationBuilder application)
         {
             application.UseExceptionHandler(a => a.Run(async context =>
             {

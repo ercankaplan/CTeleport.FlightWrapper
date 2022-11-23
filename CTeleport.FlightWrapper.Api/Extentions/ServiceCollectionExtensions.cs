@@ -1,5 +1,8 @@
 ﻿using CTeleport.FlightWrapper.Core.Configuration;
+using CTeleport.FlightWrapper.Core.HttpClient;
 using CTeleport.FlightWrapper.Core.Infrastructure;
+using CTeleport.FlightWrapper.Core.Interfaces;
+using CTeleport.FlightWrapper.Service.Airports;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
@@ -22,12 +25,9 @@ namespace CTeleport.FlightWrapper.Api.Extentions
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="environment">Hosting environment</param>
         /// <returns>Configured engine and app settings</returns>
-        public static AppSettings ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+        public static AppSettings ConfigureServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            // set culture info
-            var culture = new CultureInfo("tr-TR");
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
+           
 
             //add configuration parameters
             var appSettings = new AppSettings();
@@ -46,7 +46,6 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
             services.AddSwaggerGen();
 
-
             //add options feature
             services.AddOptions();
 
@@ -57,28 +56,17 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             services.AddHttpContextAccessor();
 
             //add logging
-            //services.AddSeturLogger();
-
-
-            //add data protection
-            //services.AddSeturDataProtection();
+            //services.AddLogger();
 
             //register custom services
+            services.AddCTeleportHttpClientHelper();
             services.AddServices();
-
-            //add swagger
-            //services.AddSwagger();
 
             //add automapper
             //services.AddAutoMapper();
 
             //add auth
-            //services.AddSeturAuthentication();
-
-           
-
-            //add mvc
-            //services.AddSeturMvc();
+            //services.AddAuthentication();
 
             ////add versioning
             //services.AddApiVersioning();
@@ -133,10 +121,16 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
 
             // Services
-            //services.AddScoped<IAzureSearchService, AzureSearchService>();
+            services.AddScoped<IAirportService, AirportService>();
             //services.AddScoped<IRetardService, RetardService>();
         }
 
-        
+        public static void AddCTeleportHttpClientHelper(this IServiceCollection services)
+        {
+            services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>();
+        }
+
+
+
     }
 }

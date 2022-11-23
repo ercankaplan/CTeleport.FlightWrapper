@@ -6,13 +6,8 @@
 
         public string DestinationAirportCode { get; set; }
 
-        public MeasureType DistanceMeasureType { get; set; } = MeasureType.Mile;
 
     }
 
-    public enum MeasureType
-    { 
-        Mile,
-        Kilometer
-    }
+   
 }
