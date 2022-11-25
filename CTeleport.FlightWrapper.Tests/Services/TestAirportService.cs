@@ -36,17 +36,13 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
             // Arrange
 
             var appSettings = new AppSettings() { HostingConfig = new HostingConfig() { AirportApiUrl = _externalUrl } };
-
             var expectedResponse1 = AirportFixtures.GetTestAirportList().First();
             var expectedResponse2 = AirportFixtures.GetTestAirportList().Last();
-
             var handlerMock = MockHttpMessageHandler<Airport>.SetupHttpMockResponse(expectedResponse1, expectedResponse2, appSettings.HostingConfig.AirportApiUrl);
 
             var httpClient = new HttpClient(handlerMock.Object);
             var options = Options.Create(appSettings);
             mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
-
-            // Act
 
             var sut = new AirportService(mockCTeleportHttpClient);
 
@@ -74,8 +70,6 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
             var httpClient = new HttpClient(handlerMock.Object);
             var options = Options.Create(appSettings);
             mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
-
-            // Act
 
             var sut = new AirportService(mockCTeleportHttpClient);
 
