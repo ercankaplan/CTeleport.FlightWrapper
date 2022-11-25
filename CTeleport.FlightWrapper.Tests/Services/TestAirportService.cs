@@ -93,6 +93,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
             //Arrange
 
             var expectedResponse = AirportFixtures.GetTestAirportList().First();
+            var iataCode = expectedResponse.iata;
 
             var handlerMock = new Mock<HttpMessageHandler>();
             var response = new HttpResponseMessage
@@ -118,7 +119,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             // Act
 
-            var result = await sut.GetAirport("AMN");
+            var result = await sut.GetAirport(iataCode);
 
             // Assert
 
@@ -132,12 +133,12 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
 
         [Fact]
-        public async void ShouldReturn_AMN_Airport_When_Invokes_With_Code_AMN()
+        public async void ShouldReturn_AMS_Airport_When_Invokes_With_Code_AMS()
         {
 
             
 
-            var expectedResponse = AirportFixtures.GetTestAirportList().Where(x=> x.iata=="AMN").Single();
+            var expectedResponse = AirportFixtures.GetTestAirportList().Where(x=> x.iata=="AMS").Single();
 
             var handlerMock = new Mock<HttpMessageHandler>();
             var response = new HttpResponseMessage
@@ -172,7 +173,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             var sut = new AirportService(httpCTeleportClient);
 
-            var result = await sut.GetAirport("AMN");
+            var result = await sut.GetAirport("AMS");
 
             Assert.NotNull(result);
             handlerMock.Protected().Verify(

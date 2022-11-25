@@ -9,33 +9,38 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
 {
     public static class AirportDistanceFixtures
     {
+        /// <summary>
+        /// The shortest distance (air line) between two airports 
+        /// Values are taken from https://www.distance.to/
+        /// </summary>
+        /// <returns></returns>
         public static List<AirportDistance> GetTestAirportDistanceList() => new()
         {
              new AirportDistance()
              {
-                OrginAirportCode = "IST",
-                OrginAirportName = "Istanbul Airport",
-                DestinationAirportCode = "AMN",
-                DestinationAirportName = "Alma",
-                DistanceInMile = 5291.81,
+                OrginAirportCode = "LGS",
+                OrginAirportName = "LaGuardia",
+                DestinationAirportCode = "AMS",
+                DestinationAirportName = "Amsterdam",
+                DistanceInMile = 3629.73 ,
 
              },
              new AirportDistance()
              {
                 OrginAirportCode = "AMS",
                 OrginAirportName = "Amsterdam",
-                DestinationAirportCode = "SEN",
-                DestinationAirportName = "Southend",
-                DistanceInMile = 0,
+                DestinationAirportCode = "IST",
+                DestinationAirportName = "Istanbul Airport",
+                DistanceInMile =  1367.26,
 
              },
              new AirportDistance()
              {
-                OrginAirportCode = "TNS",
-                OrginAirportName = "Tungsten",
+                OrginAirportCode = "ESB",
+                OrginAirportName = "Esenboga International",
                 DestinationAirportCode = "BER",
                 DestinationAirportName = "Berlin Brandenburg",
-                DistanceInMile = 0,
+                DistanceInMile = 1251.10,
 
              }
         };

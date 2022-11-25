@@ -13,22 +13,73 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
         {
             new Airport()
             {
-                country = "United States",
-                city_iata= "AMN",
-                iata= "AMN",
-                city= "Alma",
-                timezone_region_name= "America/New_York",
-                country_iata= "US",
-                rating= 0,
-                name= "Alma",
+                country = "Netherlands",
+                city_iata= "AMS",
+                iata= "AMS",
+                city= "Amsterdam",
+                timezone_region_name= "Europe/Amsterdam",
+                country_iata= "NL",
+                rating= 3,
+                name= "Amsterdam",
                 location= new AirportCoordinate() {
-                lon= -84.65,
-                lat= 43.383333
+                lon= 4.763385,
+                lat= 52.309069
                 },
                 type= "airport",
-                hubs= 0
+                hubs= 7
             },
-            new Airport()
+             new Airport()
+            {
+                country = "United States",
+                city_iata= "NYC",
+                iata= "LGA",
+                city= "New York",
+                timezone_region_name= "America/New_York",
+                country_iata= "US",
+                rating= 3,
+                name= "LaGuardia",
+                location= new AirportCoordinate() {
+                lon= -73.871617,
+                lat= 40.774252
+                },
+                type= "airport",
+                hubs= 1
+            },
+             new Airport()
+            {
+                country = "Turkey",
+                city_iata= "ANK",
+                iata= "ESB",
+                city= "Ankara",
+                timezone_region_name= "Europe/Istanbul",
+                country_iata= "TR",
+                rating= 2,
+                name= "Esenboga International",
+                location= new AirportCoordinate() {
+                lon= 32.993145,
+                lat= 40.114941
+                },
+                type= "airport",
+                hubs= 1
+            },
+             new Airport()
+            {
+                country = "Germany",
+                city_iata= "BER",
+                iata= "BER",
+                city= "Berlin",
+                timezone_region_name= "Europe/Berlin",
+                country_iata= "DE",
+                rating= 3,
+                name= "Berlin Brandenburg",
+                location= new AirportCoordinate() {
+                lon= 13.503333,
+                lat= 52.366667
+                },
+                type= "airport",
+                hubs= 2
+            },
+             new Airport()
             {
                 country = "Turkey",
                 city_iata= "IST",

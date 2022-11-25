@@ -25,16 +25,19 @@ namespace CTeleport.FlightWrapper.Tests.ApiControllerTests
         public async Task Get_OnSuccess_ReturnsStatusCode200()
         {
             //Arrange
+            var expectedResponse1 = AirportFixtures.GetTestAirportList().First();
+            var expectedResponse2 = AirportFixtures.GetTestAirportList().Last();
+
             var mockAirportService = new Mock<IAirportService>();
 
             mockAirportService
-                .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { DestinationAirportCode = "AMN", OrginAirportCode = "IST" }))
+                .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata}))
                 .ReturnsAsync(AirportDistanceFixtures.GetTestAirportDistanceList().First());
 
             var sut = new AirportController(mockAirportService.Object);
 
             //Act
-            var result = (OkObjectResult)await sut.GetDistance(new DistanceQueryModel() { DestinationAirportCode = "AMN", OrginAirportCode = "IST" });
+            var result = (OkObjectResult)await sut.GetDistance(new DistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode  = expectedResponse2.iata });
 
             //Assert
             result.StatusCode.Should().Be(200);
