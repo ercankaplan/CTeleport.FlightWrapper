@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CTeleport.FlightWrapper.Core.Configuration;
 using CTeleport.FlightWrapper.Core.Domain.Airports;
 using CTeleport.FlightWrapper.Core.Domain.Base;
+using CTeleport.FlightWrapper.Core.Exceptions;
 using CTeleport.FlightWrapper.Core.Extentions;
 using CTeleport.FlightWrapper.Core.HttpClient;
 using CTeleport.FlightWrapper.Core.Interfaces;
@@ -17,36 +18,46 @@ namespace CTeleport.FlightWrapper.Service.Airports
     public class AirportService : IAirportService
     {
 
-        private readonly AppSettings _appSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICTeleportHttpClient _httpClient;
-        public AirportService(AppSettings appSettings, IHttpContextAccessor httpContextAccessor, ICTeleportHttpClient httpClient)
+        private readonly ICTeleportHttpClient _httpCTeleportClient;
+        public AirportService(ICTeleportHttpClient httpCTeleportClient)
         {
-            _appSettings = appSettings;
-            _httpContextAccessor = httpContextAccessor;
-            _httpClient = httpClient;
+            _httpCTeleportClient = httpCTeleportClient;
         }
 
-        public async Task<Response<double>> GetDistance(string orginAirportCode, string destinationAirportCode)
+        public async Task<Airport> GetAirport(string iataCode)
         {
-            var orgAirportResponse = await _httpClient.GetAsync<Airport>(_appSettings.HostingConfig.AirportApiUrl, string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, orginAirportCode));
+            var airportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, iataCode));
+
+            if (airportResponse.IsSuccess)
+                return airportResponse.Data;
+
+            throw new AirportNotFoundException("Airport not found");
+
+
+        }
+
+        public async Task<AirportDistance> GetDistance(AirportDistanceQueryModel request)
+        {
+            var orgAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.OrginAirportCode));
 
             if (!orgAirportResponse.IsSuccess)
             {
-                return new Response<double>() { IsSuccess = false, Status = orgAirportResponse.Status, Message = "Orgin Airport not found" };
+                throw new AirportNotFoundException("Orgin Airport not found");
             }
-            var destAirportResponse = await _httpClient.GetAsync<Airport>(_appSettings.HostingConfig.AirportApiUrl, string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, destinationAirportCode));
+            var destAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.DestinationAirportCode));
 
             if (!destAirportResponse.IsSuccess)
             {
-                return new Response<double>() { IsSuccess = false, Status = destAirportResponse.Status, Message = "Destination Airport not found" };
+                throw new AirportNotFoundException("Destination Airport not found");
             }
 
-            return new Response<double>
+            return new AirportDistance
             {
-                IsSuccess = true,
-                Status = System.Net.HttpStatusCode.OK,
-                Data = orgAirportResponse.Data.GetDistanceInMiles(destAirportResponse.Data)
+                    DestinationAirportCode = destAirportResponse.Data.iata,
+                    DestinationAirportName = destAirportResponse.Data.name,
+                    OrginAirportCode = orgAirportResponse.Data.iata,
+                    OrginAirportName = orgAirportResponse.Data.name,
+                    DistanceInMile = orgAirportResponse.Data.GetDistanceInMiles(destAirportResponse.Data)
             };
 
         }

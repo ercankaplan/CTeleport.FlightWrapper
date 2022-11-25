@@ -1,4 +1,5 @@
 using CTeleport.FlightWrapper.Api.Models.Airports;
+using CTeleport.FlightWrapper.Core.Domain.Airports;
 using CTeleport.FlightWrapper.Core.Interfaces;
 using CTeleport.FlightWrapper.Service.Airports;
 using Microsoft.AspNetCore.Mvc;
@@ -11,23 +12,26 @@ namespace CTeleport.FlightWrapper.Api.Controllers
     {
         private readonly IAirportService _airportService;
 
-        private readonly ILogger<AirportController> _logger;
-
-        public AirportController(ILogger<AirportController> logger, IAirportService airportService)
+        public AirportController(IAirportService airportService)
         {
-            _logger = logger;
             _airportService = airportService;
         }
 
         [HttpGet("GetDistance")]
         public async Task<IActionResult> GetDistance([FromQuery] DistanceQueryModel model)
         {
-           var distance = await _airportService.GetDistance(model.OrginAirportCode, model.DestinationAirportCode);
+            //Todo auto mapper
+            AirportDistanceQueryModel request = new AirportDistanceQueryModel()
+            {
+                DestinationAirportCode = model.DestinationAirportCode,
+                OrginAirportCode = model.OrginAirportCode
+            };
 
-            if (distance.IsSuccess)
-                return Ok(distance.Data);
+            var distance = await _airportService.GetDistance(request);
 
-            return NotFound();
+            return Ok(distance);
+
+
         }
     }
 }

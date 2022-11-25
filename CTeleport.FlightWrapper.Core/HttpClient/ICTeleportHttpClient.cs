@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CTeleport.FlightWrapper.Core.HttpClient
 {
-    public interface ICTeleportHttpClient
+    public interface ICTeleportHttpClient : ICoreHttpClient
     {
-        Response<T> Get<T>(string apiUrl, string apiMethod, string parameters = null) where T : class;
-        Task<Response<T>> GetAsync<T>(string apiUrl, string apiMethod, string parameters= null) where T : class;
+        //Response<T> Get<T>(string apiUrl, string apiMethod, string parameters = null) where T : class;
+        //Task<Response<T>> GetAsync<T>(string apiUrl, string apiMethod, string parameters= null) where T : class;
 
 
     }

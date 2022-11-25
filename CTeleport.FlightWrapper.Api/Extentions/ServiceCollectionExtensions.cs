@@ -61,7 +61,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             //services.AddLogger();
 
             //register custom services
-            services.AddCTeleportHttpClientHelper();
+            services.AddHttpClients(configuration);
             services.AddServices();
 
             //add automapper
@@ -127,8 +127,9 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             //services.AddScoped<IRetardService, RetardService>();
         }
 
-        public static void AddCTeleportHttpClientHelper(this IServiceCollection services)
+        public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<AppSettings>(configuration);
             services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>();
         }
 

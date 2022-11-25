@@ -1,4 +1,5 @@
-﻿using CTeleport.FlightWrapper.Core.Domain.Base;
+﻿using CTeleport.FlightWrapper.Core.Domain.Airports;
+using CTeleport.FlightWrapper.Core.Domain.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace CTeleport.FlightWrapper.Core.Interfaces
 {
     public interface IAirportService
     {
-        public Task<Response<double>> GetDistance(string orginAirportCode, string destinationAirportCode);
+        public Task<AirportDistance> GetDistance(AirportDistanceQueryModel request);
+
+        public Task<Airport> GetAirport(string iataCode);
     }
 }

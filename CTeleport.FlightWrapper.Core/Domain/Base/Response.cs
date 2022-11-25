@@ -10,7 +10,7 @@ namespace CTeleport.FlightWrapper.Core.Domain.Base
     /// <summary>
     /// Represents a response
     /// </summary>
-    public partial class Response<T> : IResponse<T>
+    public partial class Response<T> //: IResponse<T>
     {
         /// <summary>
         /// Gets or sets the response IsSuccess
