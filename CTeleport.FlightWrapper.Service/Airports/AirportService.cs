@@ -55,26 +55,17 @@ namespace CTeleport.FlightWrapper.Service.Airports
         /// <exception cref="AirportNotFoundException"></exception>
         public async Task<AirportDistance> GetDistance(AirportDistanceQueryModel request)
         {
-            var orgAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.OriginAirportCode));
+            var originAirport = await this.GetAirport(request.OriginAirportCode);
 
-            if (!orgAirportResponse.IsSuccess)
-            {
-                throw new AirportNotFoundException("Origin Airport not found");
-            }
-            var destAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.DestinationAirportCode));
-
-            if (!destAirportResponse.IsSuccess)
-            {
-                throw new AirportNotFoundException("Destination Airport not found");
-            }
+            var destAirport = await this.GetAirport(request.DestinationAirportCode);
 
             return new AirportDistance
             {
-                    DestinationAirportCode = destAirportResponse.Data.iata,
-                    DestinationAirportName = destAirportResponse.Data.name,
-                    OriginAirportCode = orgAirportResponse.Data.iata,
-                    OriginAirportName = orgAirportResponse.Data.name,
-                    DistanceInMile = orgAirportResponse.Data.GetDistanceInMiles(destAirportResponse.Data)
+                    DestinationAirportCode = destAirport.iata,
+                    DestinationAirportName = destAirport.name,
+                    OriginAirportCode = originAirport.iata,
+                    OriginAirportName = originAirport.name,
+                    DistanceInMile = originAirport.GetDistanceInMiles(destAirport)
             };
 
         }

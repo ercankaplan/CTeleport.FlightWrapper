@@ -16,6 +16,18 @@ namespace CTeleport.FlightWrapper.Api.Controllers
             _airportService = airportService;
         }
 
+        /// <summary>
+        /// Gets airport details that is provided by https://places-dev.cteleport.com
+        /// </summary>
+        /// <param name="airportCode">IATA airport code</param>
+        /// <returns></returns>
+        [HttpGet("Airport")]
+        public async Task<IActionResult> GetAirport([FromQuery] string airportCode)
+        {
+            var airport = await _airportService.GetAirport(airportCode);
+
+            return Ok(airport);
+        }
 
         /// <summary>
         /// Gets the shortest distance between two airport location based on given iata airport code
