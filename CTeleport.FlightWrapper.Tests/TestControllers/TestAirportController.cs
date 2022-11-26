@@ -31,14 +31,14 @@ namespace CTeleport.FlightWrapper.Tests.ApiControllerTests
             var mockAirportService = new Mock<IAirportService>();
 
             mockAirportService
-                .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata}))
+                .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OriginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata}))
                 .ReturnsAsync(KnownDistanceFixtures.GetKnownDistanceList().First());
 
             var sut = new AirportController(mockAirportService.Object);
 
             //Act
 
-            var result = (OkObjectResult)await sut.GetDistance(new DistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode  = expectedResponse2.iata });
+            var result = (OkObjectResult)await sut.GetDistance(new DistanceQueryModel() { OriginAirportCode = expectedResponse1.iata, DestinationAirportCode  = expectedResponse2.iata });
 
             //Assert
 
@@ -56,14 +56,14 @@ namespace CTeleport.FlightWrapper.Tests.ApiControllerTests
             var mockAirportService = new Mock<IAirportService>();
             mockAirportService
                 
-                .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata }))
+                .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OriginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata }))
                 .ReturnsAsync(KnownDistanceFixtures.GetKnownDistanceList().First());
 
             var sut = new AirportController(ServiceInstance);
 
             // Act
 
-            var result = await sut.GetDistance(new DistanceQueryModel() {  OrginAirportCode = expectedResponse1.iata , DestinationAirportCode = expectedResponse2.iata });
+            var result = await sut.GetDistance(new DistanceQueryModel() {  OriginAirportCode = expectedResponse1.iata , DestinationAirportCode = expectedResponse2.iata });
 
             //Assert
 

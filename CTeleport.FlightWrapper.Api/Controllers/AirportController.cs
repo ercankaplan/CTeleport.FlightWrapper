@@ -16,6 +16,12 @@ namespace CTeleport.FlightWrapper.Api.Controllers
             _airportService = airportService;
         }
 
+
+        /// <summary>
+        /// Gets the shortest distance between two airport location based on given iata airport code
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet("GetDistance")]
         public async Task<IActionResult> GetDistance([FromQuery] DistanceQueryModel model)
         {
@@ -23,7 +29,7 @@ namespace CTeleport.FlightWrapper.Api.Controllers
             AirportDistanceQueryModel request = new AirportDistanceQueryModel()
             {
                 DestinationAirportCode = model.DestinationAirportCode,
-                OrginAirportCode = model.OrginAirportCode
+                OriginAirportCode = model.OriginAirportCode
             };
 
             var distance = await _airportService.GetDistance(request);

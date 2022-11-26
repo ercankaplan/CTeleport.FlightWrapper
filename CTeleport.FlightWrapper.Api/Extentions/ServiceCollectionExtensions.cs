@@ -4,10 +4,12 @@ using CTeleport.FlightWrapper.Core.HttpClient;
 using CTeleport.FlightWrapper.Core.Infrastructure;
 using CTeleport.FlightWrapper.Core.Interfaces;
 using CTeleport.FlightWrapper.Service.Airports;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
+using System.Reflection;
 
 namespace CTeleport.FlightWrapper.Api.Extentions
 {
@@ -45,6 +47,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
+
+            services.AddSwaggerGen(o => AddSwaggerDocumentation(o));
 
             services.AddSwaggerGen();
 
@@ -134,7 +138,13 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>();
         }
 
-      
+        private static void AddSwaggerDocumentation(SwaggerGenOptions o)
+        {
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        }
+
+
 
     }
 }

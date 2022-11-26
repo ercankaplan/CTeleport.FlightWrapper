@@ -49,7 +49,7 @@ namespace CTeleport.FlightWrapper.Service.Airports
 
         public async Task<AirportDistance> GetDistance(AirportDistanceQueryModel request)
         {
-            var orgAirport = await this.GetAirport(request.OrginAirportCode);
+            var orgAirport = await this.GetAirport(request.OriginAirportCode);
 
             var destAirport = await this.GetAirport(request.DestinationAirportCode);
 
@@ -57,8 +57,8 @@ namespace CTeleport.FlightWrapper.Service.Airports
             {
                 DestinationAirportCode = destAirport.iata,
                 DestinationAirportName = destAirport.name,
-                OrginAirportCode = orgAirport.iata,
-                OrginAirportName = orgAirport.name,
+                OriginAirportCode = orgAirport.iata,
+                OriginAirportName = orgAirport.name,
                 DistanceInMile = orgAirport.GetDistanceInMiles(destAirport)
             };
         }

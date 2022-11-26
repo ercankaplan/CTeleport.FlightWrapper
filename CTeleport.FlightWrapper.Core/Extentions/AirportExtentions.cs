@@ -12,9 +12,9 @@ namespace CTeleport.FlightWrapper.Core.Extentions
      public static class AirportExtentions
     {
         
-        public static double GetDistanceInMiles(this Airport orginAirport, Airport destinationAirport)
+        public static double GetDistanceInMiles(this Airport originAirport, Airport destinationAirport)
         {
-            return DistanceCalculater.Distance(orginAirport.location.lat, orginAirport.location.lon, 
+            return DistanceCalculater.Distance(originAirport.location.lat, originAirport.location.lon, 
                 destinationAirport.location.lat, destinationAirport.location.lon);
            
         }

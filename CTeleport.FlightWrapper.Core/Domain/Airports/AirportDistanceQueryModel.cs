@@ -8,7 +8,7 @@ namespace CTeleport.FlightWrapper.Core.Domain.Airports
 {
     public class AirportDistanceQueryModel
     {
-        public string OrginAirportCode { get; set; }
+        public string OriginAirportCode { get; set; }
         public string DestinationAirportCode { get; set; }
     }
 }

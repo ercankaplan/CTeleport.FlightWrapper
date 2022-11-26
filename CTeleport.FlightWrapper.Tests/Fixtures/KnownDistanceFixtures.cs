@@ -18,8 +18,8 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
         {
              new AirportDistance()
              {
-                OrginAirportCode = "LGS",
-                OrginAirportName = "LaGuardia",
+                OriginAirportCode = "LGS",
+                OriginAirportName = "LaGuardia",
                 DestinationAirportCode = "AMS",
                 DestinationAirportName = "Amsterdam",
                 DistanceInMile = 3629.73 ,
@@ -27,8 +27,8 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
              },
              new AirportDistance()
              {
-                OrginAirportCode = "AMS",
-                OrginAirportName = "Amsterdam",
+                OriginAirportCode = "AMS",
+                OriginAirportName = "Amsterdam",
                 DestinationAirportCode = "IST",
                 DestinationAirportName = "Istanbul Airport",
                 DistanceInMile =  1367.26,
@@ -36,8 +36,8 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
              },
              new AirportDistance()
              {
-                OrginAirportCode = "ESB",
-                OrginAirportName = "Esenboga International",
+                OriginAirportCode = "ESB",
+                OriginAirportName = "Esenboga International",
                 DestinationAirportCode = "BER",
                 DestinationAirportName = "Berlin Brandenburg",
                 DistanceInMile = 1251.10,
@@ -49,7 +49,7 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
         public static AirportDistance GetKnownDistance(string orgCode, string desCode)
         {
            var response = GetKnownDistanceList()
-                .Where(x => x.OrginAirportCode == orgCode && x.DestinationAirportCode == desCode)
+                .Where(x => x.OriginAirportCode == orgCode && x.DestinationAirportCode == desCode)
                 .SingleOrDefault();
 
             return response is null ? new AirportDistance() : response;

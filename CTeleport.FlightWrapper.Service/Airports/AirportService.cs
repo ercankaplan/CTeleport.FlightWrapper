@@ -42,7 +42,7 @@ namespace CTeleport.FlightWrapper.Service.Airports
             if (airportResponse.IsSuccess)
                 return airportResponse.Data;
 
-            throw new AirportNotFoundException("Airport not found");
+            throw new AirportNotFoundException($"Airport not found for {iataCode}");
 
 
         }
@@ -55,11 +55,11 @@ namespace CTeleport.FlightWrapper.Service.Airports
         /// <exception cref="AirportNotFoundException"></exception>
         public async Task<AirportDistance> GetDistance(AirportDistanceQueryModel request)
         {
-            var orgAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.OrginAirportCode));
+            var orgAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.OriginAirportCode));
 
             if (!orgAirportResponse.IsSuccess)
             {
-                throw new AirportNotFoundException("Orgin Airport not found");
+                throw new AirportNotFoundException("Origin Airport not found");
             }
             var destAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.DestinationAirportCode));
 
@@ -72,8 +72,8 @@ namespace CTeleport.FlightWrapper.Service.Airports
             {
                     DestinationAirportCode = destAirportResponse.Data.iata,
                     DestinationAirportName = destAirportResponse.Data.name,
-                    OrginAirportCode = orgAirportResponse.Data.iata,
-                    OrginAirportName = orgAirportResponse.Data.name,
+                    OriginAirportCode = orgAirportResponse.Data.iata,
+                    OriginAirportName = orgAirportResponse.Data.name,
                     DistanceInMile = orgAirportResponse.Data.GetDistanceInMiles(destAirportResponse.Data)
             };
 

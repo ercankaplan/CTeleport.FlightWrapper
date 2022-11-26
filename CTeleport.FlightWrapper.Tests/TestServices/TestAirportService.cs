@@ -48,7 +48,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             // Act
 
-            var result = await sut.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata });
+            var result = await sut.GetDistance(new AirportDistanceQueryModel() { OriginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata });
 
             // Assert
             Assert.NotNull(result);
@@ -77,7 +77,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             // Act
 
-            async Task Act() => await sut.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = "XXX", DestinationAirportCode = expectedResponse2.iata });
+            async Task Act() => await sut.GetDistance(new AirportDistanceQueryModel() { OriginAirportCode = "XXX", DestinationAirportCode = expectedResponse2.iata });
 
             // Assert
             await Assert.ThrowsAsync<AirportNotFoundException>(Act);
