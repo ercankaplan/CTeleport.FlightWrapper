@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace CTeleport.FlightWrapper.Tests.Fixtures
 {
-    public static class AirportDistanceFixtures
+    public static class KnownDistanceFixtures
     {
         /// <summary>
         /// The shortest distance (air line) between two airports 
         /// Values are taken from https://www.distance.to/
         /// </summary>
         /// <returns></returns>
-        public static List<AirportDistance> GetTestAirportDistanceList() => new()
+        public static List<AirportDistance> GetKnownDistanceList() => new()
         {
              new AirportDistance()
              {
@@ -42,8 +42,18 @@ namespace CTeleport.FlightWrapper.Tests.Fixtures
                 DestinationAirportName = "Berlin Brandenburg",
                 DistanceInMile = 1251.10,
 
-             }
+             },
+
         };
+
+        public static AirportDistance GetKnownDistance(string orgCode, string desCode)
+        {
+           var response = GetKnownDistanceList()
+                .Where(x => x.OrginAirportCode == orgCode && x.DestinationAirportCode == desCode)
+                .SingleOrDefault();
+
+            return response is null ? new AirportDistance() : response;
+        }
 
     }
 }

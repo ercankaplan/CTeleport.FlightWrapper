@@ -1,7 +1,6 @@
 using CTeleport.FlightWrapper.Api.Models.Airports;
 using CTeleport.FlightWrapper.Core.Domain.Airports;
 using CTeleport.FlightWrapper.Core.Interfaces;
-using CTeleport.FlightWrapper.Service.Airports;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CTeleport.FlightWrapper.Api.Controllers

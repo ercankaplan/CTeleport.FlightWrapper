@@ -52,7 +52,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             services.AddOptions();
 
             //add caching
-            //services.AddCaching();
+            services.AddMemoryCache();
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
@@ -124,6 +124,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
             // Services
             services.AddScoped<IAirportService, AirportService>();
+            services.Decorate<IAirportService, CachedAirportService>();
             //services.AddScoped<IRetardService, RetardService>();
         }
 

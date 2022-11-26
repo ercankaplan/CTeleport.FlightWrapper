@@ -32,14 +32,16 @@ namespace CTeleport.FlightWrapper.Tests.ApiControllerTests
 
             mockAirportService
                 .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata}))
-                .ReturnsAsync(AirportDistanceFixtures.GetTestAirportDistanceList().First());
+                .ReturnsAsync(KnownDistanceFixtures.GetKnownDistanceList().First());
 
             var sut = new AirportController(mockAirportService.Object);
 
             //Act
+
             var result = (OkObjectResult)await sut.GetDistance(new DistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode  = expectedResponse2.iata });
 
             //Assert
+
             result.StatusCode.Should().Be(200);
         }
 
@@ -48,37 +50,23 @@ namespace CTeleport.FlightWrapper.Tests.ApiControllerTests
         {
             //Arrange
   
-
-            //var appSettings = new AppSettings() { HostingConfig = new HostingConfig() { AirportApiUrl = _externalUrl } };
-
             var expectedResponse1 = AirportFixtures.GetTestAirportList().First();
             var expectedResponse2 = AirportFixtures.GetTestAirportList().Last();
-
-            //var handlerMock = MockHttpMessageHandler<Airport>.SetupHttpMockResponse(expectedResponse1, expectedResponse2, appSettings.HostingConfig.AirportApiUrl);
-
-            //var httpClient = new HttpClient(handlerMock.Object);
-            //var options = Options.Create(appSettings);
-            //var mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
-            //var airportService = new AirportService(mockCTeleportHttpClient);
 
             var mockAirportService = new Mock<IAirportService>();
             mockAirportService
                 
                 .Setup(service => service.GetDistance(new AirportDistanceQueryModel() { OrginAirportCode = expectedResponse1.iata, DestinationAirportCode = expectedResponse2.iata }))
-                .ReturnsAsync(AirportDistanceFixtures.GetTestAirportDistanceList().First());
-
-            
-            //var sut = new AirportController(mockAirportService.Object);
-
+                .ReturnsAsync(KnownDistanceFixtures.GetKnownDistanceList().First());
 
             var sut = new AirportController(ServiceInstance);
 
             // Act
 
-
             var result = await sut.GetDistance(new DistanceQueryModel() {  OrginAirportCode = expectedResponse1.iata , DestinationAirportCode = expectedResponse2.iata });
 
             //Assert
+
             result.Should().BeOfType<OkObjectResult>();
             ((OkObjectResult)result).Value.Should().BeOfType<AirportDistance>();
         }

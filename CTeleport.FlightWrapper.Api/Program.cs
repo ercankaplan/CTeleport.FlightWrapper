@@ -4,12 +4,10 @@ using FluentValidation.AspNetCore;
 using Serilog;
 using System.Reflection;
 
-//create the logger and setup your sinks, filters and properties
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Get environment configurations
 
 var configuration = new ConfigurationBuilder()
                 .SetBasePath(builder.Environment.ContentRootPath)
@@ -22,6 +20,8 @@ var configuration = new ConfigurationBuilder()
 
 AppSettings appSettings = builder.Services.ConfigureServices(configuration, builder.Environment);
 
+//Add validator
+
 builder.Services.AddControllers()
                 .AddFluentValidation(options =>
                 {
@@ -32,6 +32,8 @@ builder.Services.AddControllers()
                     // Automatic registration of validators in assembly
                     options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                 });
+
+//create the logger and setup your sinks, filters and properties
 
 var logger = new LoggerConfiguration()
         .ReadFrom.Configuration(builder.Configuration)

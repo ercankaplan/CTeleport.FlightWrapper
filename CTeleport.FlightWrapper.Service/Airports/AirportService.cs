@@ -19,11 +19,22 @@ namespace CTeleport.FlightWrapper.Service.Airports
     {
 
         private readonly ICTeleportHttpClient _httpCTeleportClient;
+
+        /// <summary>
+        /// Constractor of AirportService
+        /// </summary>
+        /// <param name="httpCTeleportClient">passes the instance of ICTeleportHttpClient with dependency injection</param>
         public AirportService(ICTeleportHttpClient httpCTeleportClient)
         {
             _httpCTeleportClient = httpCTeleportClient;
         }
 
+        /// <summary>
+        /// Gets airport detail based on given  iataCode
+        /// </summary>
+        /// <param name="iataCode"></param>
+        /// <returns></returns>
+        /// <exception cref="AirportNotFoundException"></exception>
         public async Task<Airport> GetAirport(string iataCode)
         {
             var airportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, iataCode));
@@ -36,6 +47,12 @@ namespace CTeleport.FlightWrapper.Service.Airports
 
         }
 
+        /// <summary>
+        /// Gets the shortest distance between two airport location
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="AirportNotFoundException"></exception>
         public async Task<AirportDistance> GetDistance(AirportDistanceQueryModel request)
         {
             var orgAirportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, request.OrginAirportCode));

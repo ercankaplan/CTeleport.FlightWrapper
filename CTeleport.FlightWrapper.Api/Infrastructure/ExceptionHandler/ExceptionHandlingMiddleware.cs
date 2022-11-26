@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
+using CTeleport.FlightWrapper.Core.Exceptions;
+using BadRequestException = CTeleport.FlightWrapper.Core.Exceptions.BadRequestException;
+using KeyNotFoundException = CTeleport.FlightWrapper.Core.Exceptions.KeyNotFoundException;
+using NotImplementedException = CTeleport.FlightWrapper.Core.Exceptions.NotImplementedException;
+using UnauthorizedAccessException = CTeleport.FlightWrapper.Core.Exceptions.UnauthorizedAccessException;
+
 
 namespace CTeleport.FlightWrapper.Api.Infrastructure.ExceptionHandler
 {
@@ -50,17 +57,61 @@ namespace CTeleport.FlightWrapper.Api.Infrastructure.ExceptionHandler
         /// <param name="context">HttpContext.</param>
         /// <param name="ex">Exception.</param>
         /// <returns>Task.</returns>
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            HttpStatusCode status;
+            var stackTrace = String.Empty;
+            string message;
+            var exceptionType = exception.GetType();
 
+            if (exceptionType == typeof(BadRequestException))
+            {
+                message = exception.Message;
+                status = HttpStatusCode.BadRequest;
+                stackTrace = exception.StackTrace;
+            }
+            else if (exceptionType == typeof(NotFoundException))
+            {
+                message = exception.Message;
+                status = HttpStatusCode.NotFound;
+                stackTrace = exception.StackTrace;
+            }
+            else if (exceptionType == typeof(NotImplementedException))
+            {
+                status = HttpStatusCode.NotImplemented;
+                message = exception.Message;
+                stackTrace = exception.StackTrace;
+            }
+            else if (exceptionType == typeof(UnauthorizedAccessException))
+            {
+                status = HttpStatusCode.Unauthorized;
+                message = exception.Message;
+                stackTrace = exception.StackTrace;
+            }
+            else if (exceptionType == typeof(KeyNotFoundException))
+            {
+                status = HttpStatusCode.Unauthorized;
+                message = exception.Message;
+                stackTrace = exception.StackTrace;
+            }
+            else
+            {
+                status = HttpStatusCode.InternalServerError;
+                message = exception.Message;
+                stackTrace = exception.StackTrace;
+            }
 
-            var innerExMessage = GetInnerExceptionMessage(ex);
+            var logText = JsonSerializer.Serialize(new { error = message, stackTrace });
+            var exceptionResult = JsonSerializer.Serialize(new { errorCode= status,  errorMessage = message });
+            
 
-            _logger.LogError(ex, $"{ex.Source} => {innerExMessage}");
+            _logger.LogError(exception, $"{exception.Source} => {logText}");
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            await context.Response.WriteAsync(ex.Message);
+            context.Response.StatusCode = (int)status;
+            context.Response.WriteAsync(exceptionResult);
+
+           
            
         }
 

@@ -25,13 +25,13 @@ using CTeleport.FlightWrapper.Core.Exceptions;
 namespace CTeleport.FlightWrapper.Tests.ServiceTests
 {
 
-    public class TestAirportService: TestServiceContainer
+    public class TestAirportService
     {
         private readonly string   _externalUrl = "https://places-dev.cteleport.com";
 
 
         [Fact]
-        public async Task Should_Return_Distance_In_Mile_Between_Two_Airport()
+        public async Task Should_Return_The_Distance_With_A_Tolerance_Lower_Than_0dot5()
         {
             // Arrange
 
@@ -42,7 +42,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             var httpClient = new HttpClient(handlerMock.Object);
             var options = Options.Create(appSettings);
-            mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
+            var mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
 
             var sut = new AirportService(mockCTeleportHttpClient);
 
@@ -52,7 +52,9 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             // Assert
             Assert.NotNull(result);
-            Assert.True(result.DistanceInMile > 1000);
+            AirportDistance knownDistance = KnownDistanceFixtures.GetKnownDistance(expectedResponse1.iata, expectedResponse2.iata);
+            var tolerance = Math.Abs(result.DistanceInMile -  knownDistance.DistanceInMile) * 100 / knownDistance.DistanceInMile;
+            Assert.True(tolerance < 0.5);
         }
 
         [Fact]
@@ -69,7 +71,7 @@ namespace CTeleport.FlightWrapper.Tests.ServiceTests
 
             var httpClient = new HttpClient(handlerMock.Object);
             var options = Options.Create(appSettings);
-            mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
+            var mockCTeleportHttpClient = new CTeleportHttpClient(options, httpClient);
 
             var sut = new AirportService(mockCTeleportHttpClient);
 
