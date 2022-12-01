@@ -8,7 +8,7 @@ namespace CTeleport.FlightWrapper.Service.Airports
 {
     internal static partial class AirportServiceDefaults
     {
-        public const string ApiGet_AirportByIATACode = "/airports/{0}";
+        public const string ApiGet_AirportByIATACode = "airports/{0}";
         
     }
 }

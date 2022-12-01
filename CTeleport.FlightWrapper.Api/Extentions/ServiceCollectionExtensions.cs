@@ -1,12 +1,15 @@
-﻿using CTeleport.FlightWrapper.Core.Configuration;
+﻿using CTeleport.FlightWrapper.Api.Infrastructure.Filters;
+using CTeleport.FlightWrapper.Core.Configuration;
 using CTeleport.FlightWrapper.Core.HttpClient;
 using CTeleport.FlightWrapper.Core.Infrastructure;
 using CTeleport.FlightWrapper.Core.Interfaces;
 using CTeleport.FlightWrapper.Service.Airports;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
+using System.Reflection;
 
 namespace CTeleport.FlightWrapper.Api.Extentions
 {
@@ -40,9 +43,12 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             AppSettings = appSettings;
             Configuration = configuration;
 
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(typeof(ModelStateFilter)));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
+
+            services.AddSwaggerGen(o => AddSwaggerDocumentation(o));
 
             services.AddSwaggerGen();
 
@@ -50,7 +56,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             services.AddOptions();
 
             //add caching
-            //services.AddCaching();
+            services.AddMemoryCache();
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
@@ -59,7 +65,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             //services.AddLogger();
 
             //register custom services
-            services.AddCTeleportHttpClientHelper();
+            services.AddHttpClients(configuration);
             services.AddServices();
 
             //add automapper
@@ -122,12 +128,20 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
             // Services
             services.AddScoped<IAirportService, AirportService>();
+            services.Decorate<IAirportService, CachedAirportService>();
             //services.AddScoped<IRetardService, RetardService>();
         }
 
-        public static void AddCTeleportHttpClientHelper(this IServiceCollection services)
+        public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<AppSettings>(configuration);
             services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>();
+        }
+
+        private static void AddSwaggerDocumentation(SwaggerGenOptions o)
+        {
+            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         }
 
 

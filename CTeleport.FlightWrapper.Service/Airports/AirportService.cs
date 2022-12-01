@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CTeleport.FlightWrapper.Core.Configuration;
 using CTeleport.FlightWrapper.Core.Domain.Airports;
 using CTeleport.FlightWrapper.Core.Domain.Base;
+using CTeleport.FlightWrapper.Core.Exceptions;
 using CTeleport.FlightWrapper.Core.Extentions;
 using CTeleport.FlightWrapper.Core.HttpClient;
 using CTeleport.FlightWrapper.Core.Interfaces;
@@ -17,36 +18,54 @@ namespace CTeleport.FlightWrapper.Service.Airports
     public class AirportService : IAirportService
     {
 
-        private readonly AppSettings _appSettings;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICTeleportHttpClient _httpClient;
-        public AirportService(AppSettings appSettings, IHttpContextAccessor httpContextAccessor, ICTeleportHttpClient httpClient)
+        private readonly ICTeleportHttpClient _httpCTeleportClient;
+
+        /// <summary>
+        /// Constractor of AirportService
+        /// </summary>
+        /// <param name="httpCTeleportClient">passes the instance of ICTeleportHttpClient with dependency injection</param>
+        public AirportService(ICTeleportHttpClient httpCTeleportClient)
         {
-            _appSettings = appSettings;
-            _httpContextAccessor = httpContextAccessor;
-            _httpClient = httpClient;
+            _httpCTeleportClient = httpCTeleportClient;
         }
 
-        public async Task<Response<double>> GetDistance(string orginAirportCode, string destinationAirportCode)
+        /// <summary>
+        /// Gets airport detail based on given  iataCode
+        /// </summary>
+        /// <param name="iataCode"></param>
+        /// <returns></returns>
+        /// <exception cref="AirportNotFoundException"></exception>
+        public async Task<Airport> GetAirport(string iataCode)
         {
-            var orgAirportResponse = await _httpClient.GetAsync<Airport>(_appSettings.HostingConfig.AirportApiUrl, string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, orginAirportCode));
+            var airportResponse = await _httpCTeleportClient.GetAsync<Airport>(string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, iataCode));
 
-            if (!orgAirportResponse.IsSuccess)
-            {
-                return new Response<double>() { IsSuccess = false, Status = orgAirportResponse.Status, Message = "Orgin Airport not found" };
-            }
-            var destAirportResponse = await _httpClient.GetAsync<Airport>(_appSettings.HostingConfig.AirportApiUrl, string.Format(AirportServiceDefaults.ApiGet_AirportByIATACode, destinationAirportCode));
+            if (airportResponse.IsSuccess)
+                return airportResponse.Data;
 
-            if (!destAirportResponse.IsSuccess)
-            {
-                return new Response<double>() { IsSuccess = false, Status = destAirportResponse.Status, Message = "Destination Airport not found" };
-            }
+            throw new AirportNotFoundException($"Airport not found for {iataCode}");
 
-            return new Response<double>
+
+        }
+
+        /// <summary>
+        /// Gets the shortest distance between two airport location
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="AirportNotFoundException"></exception>
+        public async Task<AirportDistance> GetDistance(AirportDistanceQueryModel request)
+        {
+            var originAirport = await this.GetAirport(request.OriginAirportCode);
+
+            var destAirport = await this.GetAirport(request.DestinationAirportCode);
+
+            return new AirportDistance
             {
-                IsSuccess = true,
-                Status = System.Net.HttpStatusCode.OK,
-                Data = orgAirportResponse.Data.GetDistanceInMiles(destAirportResponse.Data)
+                    DestinationAirportCode = destAirport.iata,
+                    DestinationAirportName = destAirport.name,
+                    OriginAirportCode = originAirport.iata,
+                    OriginAirportName = originAirport.name,
+                    DistanceInMile = originAirport.GetDistanceInMiles(destAirport)
             };
 
         }
