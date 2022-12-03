@@ -34,7 +34,7 @@ builder.Services.AddControllers()
                 });
 
 //create the logger and setup your sinks, filters and properties
-
+/*
 var logger = new LoggerConfiguration()
         .ReadFrom.Configuration(builder.Configuration)
         .Enrich.FromLogContext()
@@ -42,7 +42,14 @@ var logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+*/
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console(outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateBootstrapLogger();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

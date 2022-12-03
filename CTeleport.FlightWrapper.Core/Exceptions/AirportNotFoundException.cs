@@ -8,9 +8,14 @@ namespace CTeleport.FlightWrapper.Core.Exceptions
 {
     public class AirportNotFoundException: ArgumentException
     {
+       
         public AirportNotFoundException(string message) : base(message)
         { 
-        
+           
+        }
+        public AirportNotFoundException(string message,Exception innerException) : base(message, innerException)
+        {
+
         }
     }
 }

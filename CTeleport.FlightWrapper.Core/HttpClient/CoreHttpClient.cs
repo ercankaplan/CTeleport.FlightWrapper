@@ -17,14 +17,14 @@ namespace CTeleport.FlightWrapper.Core.HttpClient
             _httpClient = httpClient;
         }
 
-        public Response<T> Get<T>(string apiMethod, string parameters=null) where T : class
+        public Response<T> Get<T>(string apiMethod, string parameters = null) where T : class
         {
-            return GetAsync<T>( apiMethod, parameters).GetAwaiter().GetResult();
+            return GetAsync<T>(apiMethod, parameters).GetAwaiter().GetResult();
         }
 
-        public async Task<Response<T>> GetAsync<T>(string apiMethod, string parameters=null) where T : class
+        public async Task<Response<T>> GetAsync<T>(string apiMethod, string parameters = null) where T : class
         {
-          
+
             HttpResponseMessage httpResponseMessage = await _httpClient.GetAsync(apiMethod);
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
@@ -32,8 +32,7 @@ namespace CTeleport.FlightWrapper.Core.HttpClient
                 {
                     IsSuccess = httpResponseMessage.IsSuccessStatusCode,
                     Status = httpResponseMessage.StatusCode,
-                    
-
+                    Message = httpResponseMessage.Content.ReadAsStringAsync().Result
                 };
             }
 

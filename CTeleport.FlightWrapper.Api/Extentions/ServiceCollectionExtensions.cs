@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.Text;
 using System.Reflection;
+using Polly;
 
 namespace CTeleport.FlightWrapper.Api.Extentions
 {
@@ -135,7 +136,29 @@ namespace CTeleport.FlightWrapper.Api.Extentions
         public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AppSettings>(configuration);
-            services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>();
+
+            IAsyncPolicy<HttpResponseMessage> httpWaitAndRetryPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                                                                             .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(retryAttempt),(result, span, retryCount, ctx) => 
+                                                                             { Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine($"Retrying({retryCount})..."); });
+
+            /*This confirms the circuit is “open”, and Polly won’t try to perform the action for a total of 1 minute, 
+             * saving precious resources and “failing fast”, which as we mentioned earlier is a great principle in building resilient microservices.
+             */
+            IAsyncPolicy<HttpResponseMessage> circuitBreakerPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                                                                           .CircuitBreakerAsync(5, TimeSpan.FromMinutes(1));
+
+            IAsyncPolicy<HttpResponseMessage> fallbackPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+                                                                     .FallbackAsync(FallbackAction, OnFallbackAsync);
+
+           
+
+            IAsyncPolicy<HttpResponseMessage> wrapOfRetryAndFallback = Policy.WrapAsync(fallbackPolicy, httpWaitAndRetryPolicy,circuitBreakerPolicy);
+
+
+
+
+            services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>().AddPolicyHandler(wrapOfRetryAndFallback);
+                                                                         
         }
 
         private static void AddSwaggerDocumentation(SwaggerGenOptions o)
@@ -146,5 +169,27 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
 
 
+        private static Task OnFallbackAsync(DelegateResult<HttpResponseMessage> response, Context context)
+        {
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(">>>>> Please try again later =>>>>> logging");
+    
+            return Task.CompletedTask;
+        }
+
+        private static Task<HttpResponseMessage> FallbackAction(DelegateResult<HttpResponseMessage> responseToFailedRequest, Context context, CancellationToken cancellationToken)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Fallback action is executing");
+
+            HttpResponseMessage httpResponseMessage = new HttpResponseMessage(responseToFailedRequest.Result.StatusCode)
+            {
+                Content = new StringContent($">>>>> The fallback executed, the original error was {responseToFailedRequest.Result.ReasonPhrase}")
+            };
+            return Task.FromResult(httpResponseMessage);
+        }
+
+      
     }
 }
