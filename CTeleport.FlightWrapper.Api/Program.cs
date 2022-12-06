@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using CTeleport.FlightWrapper.Api.Extentions;
 using CTeleport.FlightWrapper.Core.Configuration;
 using FluentValidation.AspNetCore;
@@ -34,7 +35,7 @@ builder.Services.AddControllers()
                 });
 
 //create the logger and setup your sinks, filters and properties
-/*
+/*  //Write to file
 var logger = new LoggerConfiguration()
         .ReadFrom.Configuration(builder.Configuration)
         .Enrich.FromLogContext()
@@ -51,6 +52,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,5 +60,9 @@ var app = builder.Build();
 //app.MapHealthChecks("/healthcheck");
 
 app.ConfigureRequestPipeline(builder.Environment,appSettings);
+
+app.MapControllers();//RateLimit doesn't work with  app.UseEndpoints(endpoints => {endpoints.MapControllers();});
+
+
 
 app.Run();

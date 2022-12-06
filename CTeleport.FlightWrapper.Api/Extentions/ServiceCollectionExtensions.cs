@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Text;
 using System.Reflection;
 using Polly;
+using AspNetCoreRateLimit;
 
 namespace CTeleport.FlightWrapper.Api.Extentions
 {
@@ -59,6 +60,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             //add caching
             services.AddMemoryCache();
 
+            services.AddAspNetCoreRateLimiting();
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
@@ -105,6 +108,26 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             return config;
         }
 
+        public static void AddAspNetCoreRateLimiting(this IServiceCollection services)
+        {
+            // needed to load configuration from appsettings.json
+            services.AddOptions();
+
+            // needed to store rate limit counters and ip rules
+            services.AddMemoryCache();
+
+            //load general configuration from appsettings.json
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+
+            //load ip rules from appsettings.json
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+
+            // inject counter and rules stores
+            services.AddInMemoryRateLimiting();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+         
+
+        }
 
 
 
@@ -133,6 +156,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             //services.AddScoped<IRetardService, RetardService>();
         }
 
+       
+
         public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AppSettings>(configuration);
@@ -158,6 +183,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
 
             services.AddHttpClient<ICTeleportHttpClient, CTeleportHttpClient>().AddPolicyHandler(wrapOfRetryAndFallback);
+
                                                                          
         }
 

@@ -19,7 +19,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTeleport.FlightWrapper.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTeleport.FlightWrapper.Api", "CTeleport.FlightWrapper.Api\CTeleport.FlightWrapper.Api.csproj", "{0CE34B83-A455-4D03-B257-43510E9E3FAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTeleport.FlightWrapper.Tests", "CTeleport.FlightWrapper.Tests\CTeleport.FlightWrapper.Tests.csproj", "{B6EBA0D1-2790-40F8-9043-F95671DC3741}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTeleport.FlightWrapper.Tests", "CTeleport.FlightWrapper.Tests\CTeleport.FlightWrapper.Tests.csproj", "{B6EBA0D1-2790-40F8-9043-F95671DC3741}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CTeleport.MobilBFF.Api", "CTeleport.MobilBFF.Api\CTeleport.MobilBFF.Api.csproj", "{646147CE-711F-4954-9F61-334E4AC39306}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{075D6CA2-EDF5-4A6E-8F41-CF502F2C0243}"
+	ProjectSection(SolutionItems) = preProject
+		Api.md = Api.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +54,10 @@ Global
 		{B6EBA0D1-2790-40F8-9043-F95671DC3741}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6EBA0D1-2790-40F8-9043-F95671DC3741}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6EBA0D1-2790-40F8-9043-F95671DC3741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{646147CE-711F-4954-9F61-334E4AC39306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{646147CE-711F-4954-9F61-334E4AC39306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{646147CE-711F-4954-9F61-334E4AC39306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{646147CE-711F-4954-9F61-334E4AC39306}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +70,8 @@ Global
 		{A63C8BE9-8B6C-4DEB-897B-F58F8D1B0376} = {A5377D57-F0F5-4182-8A31-298D7C2873CB}
 		{0CE34B83-A455-4D03-B257-43510E9E3FAD} = {B5924D3B-0314-4614-ADC6-749A04F6EB72}
 		{B6EBA0D1-2790-40F8-9043-F95671DC3741} = {5E19D3FD-F5B2-49FC-B598-1A5C3D71C674}
+		{646147CE-711F-4954-9F61-334E4AC39306} = {B5924D3B-0314-4614-ADC6-749A04F6EB72}
+		{075D6CA2-EDF5-4A6E-8F41-CF502F2C0243} = {85F12E6D-05F0-4FF2-B41A-1C9D470D617C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CCCF796B-B92F-478B-8EEE-8F7F8C409D92}
