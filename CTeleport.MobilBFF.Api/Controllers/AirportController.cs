@@ -1,9 +1,9 @@
-using CTeleport.FlightWrapper.Api.Models.Airports;
 using CTeleport.FlightWrapper.Core.Domain.Airports;
 using CTeleport.FlightWrapper.Core.Interfaces;
+using CTeleport.MobilBFF.Api.Models.Airports;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CTeleport.FlightWrapper.Api.Controllers
+namespace CTeleport.MobilBFF.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -50,6 +50,7 @@ namespace CTeleport.FlightWrapper.Api.Controllers
 
 
         }
-        
+
     }
+
 }

@@ -1,4 +1,5 @@
-﻿using CTeleport.FlightWrapper.Api.Infrastructure.ExceptionHandler;
+﻿using AspNetCoreRateLimit;
+using CTeleport.FlightWrapper.Api.Infrastructure.ExceptionHandler;
 using CTeleport.FlightWrapper.Api.Models.Base;
 using CTeleport.FlightWrapper.Core.Configuration;
 using Microsoft.AspNetCore.Diagnostics;
@@ -32,14 +33,17 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            //app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
+
+
+            app.UseIpRateLimit();
 
             // Configure Swagger
 
@@ -51,6 +55,12 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
   
            
+        }
+
+        private static void UseIpRateLimit(this IApplicationBuilder app)
+        {
+
+            app.UseIpRateLimiting();
         }
 
         /// <summary>
