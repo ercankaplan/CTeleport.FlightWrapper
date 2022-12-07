@@ -13,15 +13,16 @@ namespace CTeleport.FlightWrapper.Api.Extentions
     /// </summary>
     public static class ApplicationBuilderExtensions
     {
+        private static AppSettings _appSettings;
         /// <summary>
         /// Configure the application HTTP request pipeline
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         /// <param name="appSettings">Settings of the application</param>
-        public static void ConfigureRequestPipeline(this IApplicationBuilder app , IWebHostEnvironment env, AppSettings appSettings)
+        public static void ConfigureRequestPipeline(this IApplicationBuilder app, IWebHostEnvironment env, AppSettings appSettings)
         {
 
-
+            _appSettings = appSettings;
             // Configure the HTTP request pipeline.
 
             if (env.IsDevelopment())
@@ -53,14 +54,14 @@ namespace CTeleport.FlightWrapper.Api.Extentions
                 app.UseSwaggerUI();
             }
 
-  
-           
+
+
         }
 
         private static void UseIpRateLimit(this IApplicationBuilder app)
         {
-
-            app.UseIpRateLimiting();
+            if (_appSettings.RateLimitingConfig.Enable)
+                app.UseIpRateLimiting();
         }
 
         /// <summary>

@@ -12,6 +12,8 @@ using System.Text;
 using System.Reflection;
 using Polly;
 using AspNetCoreRateLimit;
+using AspNetCoreRateLimit.Redis;
+using StackExchange.Redis;
 
 namespace CTeleport.FlightWrapper.Api.Extentions
 {
@@ -20,8 +22,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
     /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static AppSettings AppSettings { get; set; }
-        public static IConfiguration Configuration { get; set; }
+        public static AppSettings _appSettings { get; set; }
+        public static IConfiguration _configuration { get; set; }
 
         /// <summary>
         /// Add services to the application and configure service provider
@@ -42,8 +44,8 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             Singleton<AppSettings>.Instance = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
             Singleton<IWebHostEnvironment>.Instance = environment;
 
-            AppSettings = appSettings;
-            Configuration = configuration;
+            _appSettings = appSettings;
+            _configuration = configuration;
 
             services.AddControllers(options => options.Filters.Add(typeof(ModelStateFilter)));
 
@@ -58,6 +60,7 @@ namespace CTeleport.FlightWrapper.Api.Extentions
             services.AddOptions();
 
             //add caching
+       
             services.AddMemoryCache();
 
             services.AddAspNetCoreRateLimiting();
@@ -110,22 +113,44 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
         public static void AddAspNetCoreRateLimiting(this IServiceCollection services)
         {
-            // needed to load configuration from appsettings.json
-            services.AddOptions();
+            if (_appSettings.RateLimitingConfig.Enable)
+            {
+                // needed to load configuration from appsettings.json
+                services.AddOptions();
 
-            // needed to store rate limit counters and ip rules
-            services.AddMemoryCache();
+                //load general configuration from appsettings.json
+                services.Configure<IpRateLimitOptions>(_configuration.GetSection("RateLimitingConfig:IpRateLimiting"));
 
-            //load general configuration from appsettings.json
-            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+                //load ip rules from appsettings.json
+                services.Configure<IpRateLimitPolicies>(_configuration.GetSection("RateLimitingConfig:IpRateLimiting:IpRateLimitPolicies"));
 
-            //load ip rules from appsettings.json
-            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+                // inject counter and rules stores
+                
+                if (_appSettings.RedisConfig.Enabled && _appSettings.RedisConfig.UseCaching)
+                {
+                    services.AddDistributedMemoryCache();
 
-            // inject counter and rules stores
-            services.AddInMemoryRateLimiting();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-         
+                    services.AddRedisRateLimiting();
+                    //services.AddDistributedRateLimiting();
+
+                    var redisOptions = ConfigurationOptions.Parse(_appSettings.RedisConfig.ConnectionString);
+                    services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
+                  
+                }
+                else
+                {
+                    // needed to store rate limit counters and ip rules
+                    services.AddMemoryCache();
+
+                    services.AddInMemoryRateLimiting();
+
+                    //
+                }
+
+                services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+           
+               
+            }
 
         }
 

@@ -23,6 +23,21 @@ CACHING ************************************************************************
 
 	Establish distributed caching services------------------------------------------------------
 
+	Distributed Memory Cache: 
+	    The Distributed Memory Cache isn't an actual distributed cache. 
+		Cached items are stored by the app instance on the server where the app is running.
+		The Distributed Memory Cache is a useful implementation,
+		In development and testing scenarios.
+		When a single server is used in production and memory consumption isn't an issue. 
+		Implementing the Distributed Memory Cache abstracts cached data storage. 
+		It allows for implementing a true distributed caching solution in the future if multiple nodes or fault tolerance become necessary.
+	Distributed SQL Server cache
+	Distributed Redis cache
+	Distributed NCache cache
+
+	This can easily be replaced with a distributed cache like Redis by installing the AspNetCoreRateLimit.Redis package. 
+	The service registration code also needs some changes to use Redis:
+
 
 UNIT TESTING*************************************************************************************
 
@@ -51,6 +66,7 @@ APIGateway Ocelot
 JWT Token Auth
 RabitMQ
 AzureFunction
+Session
 F5
 Deploying Azure cloud
 Add React UI
