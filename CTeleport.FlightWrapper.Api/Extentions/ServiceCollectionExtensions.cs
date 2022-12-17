@@ -135,7 +135,12 @@ namespace CTeleport.FlightWrapper.Api.Extentions
 
                     var redisOptions = ConfigurationOptions.Parse(_appSettings.RedisConfig.ConnectionString);
                     services.AddSingleton<IConnectionMultiplexer>(provider => ConnectionMultiplexer.Connect(redisOptions));
-                  
+
+                    services.AddStackExchangeRedisCache(options => {
+                        options.Configuration = _appSettings.RedisConfig.ConnectionString;
+                        //options.InstanceName = "RedisDemo_";
+                    });
+
                 }
                 else
                 {
